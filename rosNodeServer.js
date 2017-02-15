@@ -38,11 +38,6 @@ var cmdVelTopic = new roslib.Topic({
 
 var messageToSend;
 
-cmdVelTopic.subscribe(function(message)
-{	
-    messageToSend=message.data;
-});
-
 //api endpoints
 
 app.get("/forward", function(req,res)
@@ -60,7 +55,7 @@ app.get("/forward", function(req,res)
     }
     });
 	cmdVelTopic.publish(forward);
-	res.send("moved forward, subscriber sent "+messageToSend);
+    res.send("moved forward!");
 });
 
 app.get("/back", function(req,res)
@@ -78,7 +73,7 @@ app.get("/back", function(req,res)
     }
     });
 	cmdVelTopic.publish(back);
-	res.send("moved back, subscriber sent "+messageToSend);
+    res.send("moved back!");
 });
 
 app.get("/right", function(req,res)
@@ -86,17 +81,17 @@ app.get("/right", function(req,res)
     var right = new roslib.Message({
     linear : {
         x : 0.0,
-        y : -2.0,
+        y : 0.0,
         z : 0.0
     },
     angular : {
         x : 0.0,
         y : 0.0,
-        z : 0.0
+        z : -2.0
     }
     });
 	cmdVelTopic.publish(right);
-	res.send("moved right, subscriber sent "+messageToSend);
+    res.send("moved right!");
 });
 
 app.get("/left", function(req,res)
@@ -104,15 +99,15 @@ app.get("/left", function(req,res)
     var left = new roslib.Message({
     linear : {
         x : 0.0,
-        y : 2.0,
+        y : 0.0,
         z : 0.0
     },
     angular : {
         x : 0.0,
         y : 0.0,
-        z : 0.0
+        z : 2.0
     }
     });
 	cmdVelTopic.publish(left);
-	res.send("moved left, subscriber sent "+messageToSend);
+    res.send("moved left!");
 });
