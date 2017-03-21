@@ -30,21 +30,48 @@ var rosServer = new roslib.Ros({
     console.log('Connection to websocket server closed.');
   });
 
+/*
 var cmdVelTopic = new roslib.Topic({
     ros : rosServer,
-    name : '/turtle1/cmd_vel',
+    name : '/biba/cmd_vel',
     messageType : 'geometry_msgs/Twist'
 });
+*/
 
-var messageToSend;
+//created new topic in order to enable arbiter to set priorities
 
-//api endpoints
+var backendTopic = new roslib.Topic({
+    ros:rosServer,
+    name: 'biba/backend',
+    messageType: 'std_msgs/String' //temporary type, need to look into generating new message types
+})
+
+//scheduling helpers
+function publishFunc(message,topic){topic.publish(message);}
+var intervalMs = 200;
+function clearExistingInterval(interval)
+{
+    if(typeof(interval)=='Timeout')
+        clearInterval(interval)
+}
+
+//voice api endpoints
+
+
+app.post("/sendLocation",function(req,res)
+{
+    console.log(res.body);
+    //TODO: parse and publish message to ros topic
+});
+
+//robot api endpoints
 
 app.get("/forward", function(req,res)
 {
+    clearExistingInterval(poller);
     var forward = new roslib.Message({
     linear : {
-        x : 2.0,
+        x : 0.2,
         y : 0.0,
         z : 0.0
     },
@@ -55,14 +82,16 @@ app.get("/forward", function(req,res)
     }
     });
 	cmdVelTopic.publish(forward);
+    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved forward!");
 });
 
 app.get("/back", function(req,res)
 {
+    clearExistingInterval(poller);
     var back = new roslib.Message({
     linear : {
-        x : -2.0,
+        x : -0.2,
         y : 0.0,
         z : 0.0
     },
@@ -73,11 +102,13 @@ app.get("/back", function(req,res)
     }
     });
 	cmdVelTopic.publish(back);
+    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved back!");
 });
 
 app.get("/right", function(req,res)
 {
+    clearExistingInterval(poller);
     var right = new roslib.Message({
     linear : {
         x : 0.0,
@@ -87,15 +118,17 @@ app.get("/right", function(req,res)
     angular : {
         x : 0.0,
         y : 0.0,
-        z : -2.0
+        z : 0.2
     }
     });
 	cmdVelTopic.publish(right);
+    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved right!");
 });
 
 app.get("/left", function(req,res)
 {
+    clearExistingInterval(poller);
     var left = new roslib.Message({
     linear : {
         x : 0.0,
@@ -105,9 +138,29 @@ app.get("/left", function(req,res)
     angular : {
         x : 0.0,
         y : 0.0,
-        z : 2.0
+        z : 0.2
     }
     });
 	cmdVelTopic.publish(left);
+    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved left!");
+});
+
+app.get("/stop", function(req,res)
+{
+    clearExistingInterval(poller);
+    var stop = new roslib.Message({
+    linear : {
+        x : 0.0,
+        y : 0.0,
+        z : 0.0
+    },
+    angular : {
+        x : 0.0,
+        y : 0.0,
+        z : 0.0
+    }
+    });
+	cmdVelTopic.publish(stop);
+    res.send("stopped!");
 });
