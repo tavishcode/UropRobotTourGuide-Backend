@@ -25,7 +25,7 @@ console.log('Listening on local host port: ' + port);
 
 var rosServer = new roslib.Ros({
     //url : 'ws://127.0.0.1:9090'
-    url : 'ws://10.89.8.2:9090'
+    url : 'ws://10.89.8.12:9090'
   });
 
   rosServer.on('connection', function() {
