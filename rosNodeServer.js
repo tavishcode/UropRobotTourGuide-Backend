@@ -17,21 +17,9 @@ app.use(parser.json());
 
 //creating server on localhost port
 
-var port = 8000;
+var port = 3456;
 app.listen(port);
 console.log('Listening on local host port: ' + port);
-
-//running python code
-
-var uint8arrayToString = function(data){
-    return String.fromCharCode.apply(null, data);
-};
-
-var process = spawn('python',['/home/tavish/Desktop/helloWorld.py']);
-
-process.stdout.on('data', function (data){
-    console.log(uint8arrayToString(data));
-});
 
 //connecting to ros server
 
@@ -80,6 +68,7 @@ var goalTopic= new roslib.Topic({
 })
 
 var poseMessage= "not initialized";
+var batteryLevel= "not initialized";
 var intervalMs = 5000;
 
 var poseTopic = new roslib.Topic({
@@ -88,6 +77,11 @@ var poseTopic = new roslib.Topic({
     messageType : 'geometry_msgs/Pose2D'
 });
 
+var batteryTopic= new roslib.Topic({
+    ros: rosServer,
+    name: '/battery_chatter',
+    messageType: 'std_msgs/String'
+})
 /*var poseTopic = new roslib.Topic({
     ros : rosServer,
     name : '/turtle1/pose',
@@ -118,12 +112,98 @@ function listenToPose()
 
 let poseListenerPoller= setInterval(listenToPose,3000);
 
+function listenToBatteryChatter()
+{
+    batteryTopic.subscribe(function(message)
+    {
+        batteryLevel= message;
+        console.log(message);
+        batteryTopic.unsubscribe();
+    });
+}
+
+let batteryListenerPoller= setInterval(listenToBatteryChatter,3000);
+
+//edwin's requests
+
+app.post("/goDirection", function(req,res)
+{
+    console.log("received go direction msg /n"+ JSON.stringify(req.body));
+    var msg= new roslib.Message({
+    header:
+    {
+        stamp:Date.now(),
+        frame_id:"map"
+    },
+    pose: 
+    {
+        position: 
+        {
+            x:req.body.x,
+            y:req.body.y,
+            z:0.0
+        },
+        orientation:
+        {
+            w:0.0
+        }
+    }
+    });
+    goalTopic.publish(msg);
+    res.send("successful req from go direction!");
+});
+
+app.get("/battery", function(req, res)
+{
+    console.log("received request for battery status");
+    res.send(batteryLevel);
+});
+//////////////////////////////////////
+
 //post requests
 
 app.post("/sendLocation", function(req,res)
 {
-    console.log(req.body);
-    var msg= new roslib.message({
+    console.log(JSON.stringify(req.body));
+    //running python code
+
+    var uint8arrayToString = function(data){
+        return String.fromCharCode.apply(null, data);
+    };
+
+    var process = spawn('python',['/home/tavish/Desktop/helloWorld.py']);
+
+    process.stdin.write(JSON.stringify(req.body));
+    process.stdin.end();
+
+    process.stdout.on('data', function (data){
+        console.log(uint8arrayToString(data));
+    });
+
+    //
+
+    /*var msg= new roslib.Message({
+    header:
+    {
+        stamp:Date.now(),
+        frame_id:"biba_base"
+    },
+    pose: 
+    {
+        position: 
+        {
+            x:1.0,
+            y:0.0,
+            z:0.0
+        },
+        orientation:
+        {
+            w:1.0
+        }
+    }
+    });
+    goalTopic.publish(msg);*/
+    var msg= new roslib.Message({
     header:
     {
         stamp:Date.now(),
