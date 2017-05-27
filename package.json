@@ -1,0 +1,24 @@
+{
+  "name": "ros-node-server-package",
+  "version": "1.0.0",
+  "description": "a remote server to enable web-based communication to a robot running ros",
+  "main": "rosNodeServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tavishcode/UropRobotTourGuide-Backend.git"
+  },
+  "author": "Tavish Gobindram",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tavishcode/UropRobotTourGuide-Backend/issues"
+  },
+  "homepage": "https://github.com/tavishcode/UropRobotTourGuide-Backend#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "roslib": "^0.18.0"
+  }
+}
