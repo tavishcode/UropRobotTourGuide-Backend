@@ -4,6 +4,7 @@
   "description": "a remote server to enable web-based communication to a robot running ros",
   "main": "rosNodeServer.js",
   "scripts": {
+    "start": "node rosNodeServer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
