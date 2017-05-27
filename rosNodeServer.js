@@ -24,6 +24,7 @@ console.log('Listening on local host port: ' + port);
 //connecting to ros server
 
 var rosServer = new roslib.Ros({
+    //url : 'ws://127.0.0.1:9090'
     url : 'ws://10.89.8.2:9090'
   });
 
@@ -42,7 +43,8 @@ var rosServer = new roslib.Ros({
 
 var cmdVelTopic = new roslib.Topic({
     ros : rosServer,
-    name : '/biba/cmd_vel',
+    //name : '/biba/cmd_vel',
+    name: 'turtle1/cmd_vel',
     messageType : 'geometry_msgs/Twist'
 });
 
