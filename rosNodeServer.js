@@ -248,10 +248,10 @@ app.get("/coordinates",function(req,res)
 
 app.get("/forward", function(req,res)
 {
-    clearExistingInterval(poller);
+    //clearExistingInterval(poller);
     var forward = new roslib.Message({
     linear : {
-        x : 0.2,
+        x : 1.0,
         y : 0.0,
         z : 0.0
     },
@@ -262,8 +262,8 @@ app.get("/forward", function(req,res)
     }
     });
 	cmdVelTopic.publish(forward);
-    destinationTopic.publish()
-    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
+    //destinationTopic.publish()
+    //let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved forward!");
 });
 
