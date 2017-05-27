@@ -24,7 +24,7 @@ console.log('Listening on local host port: ' + port);
 //connecting to ros server
 
 var rosServer = new roslib.Ros({
-    url : 'ws://localhost:9090'
+    url : 'ws://10.89.8.2:9090'
   });
 
   rosServer.on('connection', function() {
@@ -123,6 +123,13 @@ function listenToBatteryChatter()
 }
 
 let batteryListenerPoller= setInterval(listenToBatteryChatter,3000);
+
+//
+app.get("/", function(req,res)
+{
+    console.log("Server is running!");
+});
+//
 
 //edwin's requests
 
