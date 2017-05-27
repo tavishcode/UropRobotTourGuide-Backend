@@ -17,7 +17,7 @@ app.use(parser.json());
 
 //creating server on localhost port
 
-var port = 8000;
+var port = (process.env.PORT||8000);
 app.listen(port);
 console.log('Listening on local host port: ' + port);
 
