@@ -128,6 +128,7 @@ let batteryListenerPoller= setInterval(listenToBatteryChatter,3000);
 app.get("/", function(req,res)
 {
     console.log("Server is running!");
+    res.send("server is up and running");
 });
 //
 
