@@ -112,7 +112,7 @@ function listenToPose()
     });
 }
 
-let poseListenerPoller= setInterval(listenToPose,3000);
+//let poseListenerPoller= setInterval(listenToPose,3000);
 
 function listenToBatteryChatter()
 {
@@ -124,7 +124,7 @@ function listenToBatteryChatter()
     });
 }
 
-let batteryListenerPoller= setInterval(listenToBatteryChatter,3000);
+//let batteryListenerPoller= setInterval(listenToBatteryChatter,3000);
 
 //
 app.get("/", function(req,res)
@@ -269,7 +269,7 @@ app.get("/forward", function(req,res)
 
 app.get("/back", function(req,res)
 {
-    clearExistingInterval(poller);
+    //clearExistingInterval(poller);
     var back = new roslib.Message({
     linear : {
         x : -0.2,
@@ -283,13 +283,13 @@ app.get("/back", function(req,res)
     }
     });
 	cmdVelTopic.publish(back);
-    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
+    //let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved back!");
 });
 
 app.get("/right", function(req,res)
 {
-    clearExistingInterval(poller);
+    //clearExistingInterval(poller);
     var right = new roslib.Message({
     linear : {
         x : 0.0,
@@ -303,13 +303,13 @@ app.get("/right", function(req,res)
     }
     });
 	cmdVelTopic.publish(right);
-    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
+    //let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved right!");
 });
 
 app.get("/left", function(req,res)
 {
-    clearExistingInterval(poller);
+    //clearExistingInterval(poller);
     var left = new roslib.Message({
     linear : {
         x : 0.0,
@@ -323,13 +323,13 @@ app.get("/left", function(req,res)
     }
     });
 	cmdVelTopic.publish(left);
-    let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
+    //let poller = setInterval(publishFunc(forward,cmdVelTopic),intervalMs)
     res.send("moved left!");
 });
 
 app.get("/stop", function(req,res)
 {
-    clearExistingInterval(poller);
+    //clearExistingInterval(poller);
     var stop = new roslib.Message({
     linear : {
         x : 0.0,
